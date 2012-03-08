@@ -6,7 +6,7 @@ C_OPT="$CUSTOM/opt"
 C_VAR="$CUSTOM/var"
 C_ETC="$CUSTOM/etc"
 
-QUO="$CUSTOM/quo"
+QUO="/DataVolume/quo"
 
 CHROOT_DIR='/var/opt/chroot'
 
@@ -15,6 +15,7 @@ CHROOT_DIR='/var/opt/chroot'
 if [ -d $QUO ]; then
   chmod -R a+x $QUO/init.d
   chmod -R a+x $QUO/sbin
+  chmod a+x $QUO/infect/wedroInfectRootfs.sh
   chmod a+x $QUO/install.sh
 fi
 
@@ -92,15 +93,15 @@ fi
 ## ETC magic
 locale-gen
 
-for BINARY in "$(ls $QUO/extra/bin)"; do
-  cp $QUO/extra/bin/$BINARY /root/.bin
-done
+#for BINARY in "$(ls $QUO/extra/bin)"; do
+  cp $QUO/extra/bin/* /root/.bin
+#done
 chmod -R a+x /root/.bin
 
 # CRON
-cp $QUO/extra/cron/mybooklive /etc/cron.daily
-chmod a+x /etc/cron.daily/mybooklive
-/etc/init.d/cron restart
+#cp $QUO/extra/cron/mybooklive /etc/cron.daily
+#chmod a+x /etc/cron.daily/mybooklive
+#/etc/init.d/cron restart
 
 # Settings
 mv -fu /root/.etc/* -t /etc/opt
@@ -141,7 +142,7 @@ return_optware() {
   $QUO/sbin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
   ipkg update
-  ipkg install htop mc screen
+  ipkg install htop mc screen patch py27-mercurial
 
   script_optware
   echo 'ETC: fixing PATH for optware use'
@@ -195,6 +196,7 @@ do_zero() {
     return_chroot
   fi
   update_quo
+  $QUO/infect/wedroInfectRootfs.sh
 }
 
 #######################################################################################
@@ -237,13 +239,15 @@ infect_update() {
   ## Blah-blah
   ## TODO: mount QUO in rootfs for infection & chroot info rootfs
   if [ -z "$2"]; then
+    echo "[QUO]: no rootfs"
     exit 1
   else
-    SRCDIR="$2"
+    mount --bind "$QUO" "$2/opt"
     SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
-    for ITEM in $SCRIPTS; do
-      $RSCDIR/init.d/$ITEM install
+    for ITEM in "$SCRIPTS"; do
+      chroot "$2" "$2/opt/init.d/$ITEM" install
     done
+    umount "$2/opt"
   fi
 }
 

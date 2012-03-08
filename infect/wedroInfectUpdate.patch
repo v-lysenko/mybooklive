@@ -1,0 +1,12 @@
+--- postinst	2011-10-19 06:32:19.000000000 +0500
++++ /DataVolume/shares/zimniy/work/postinst	2012-03-09 23:00:13.999532775 +0400
+@@ -190,6 +190,9 @@
+ 	cp ${upgradeMountPath}/usr/local/share/bootmd1.scr ${upgradeMountPath}/boot/boot.scr
+ fi
+ 
++# QUO: "Infecting" installation with WD QUO Scripts
++wedroInfectRootfs.sh ${upgradeMountPath}
++
+ if [ ! -f /tmp/fresh_install ]; then
+ 	# make sure the copy operation of the current settings is complete
+ 	sync
