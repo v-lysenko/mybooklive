@@ -72,7 +72,6 @@ if [ -z "$(ls /opt)" ]; then
   OPTWARE='1'
 else
   script_optware
-  echo 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
 fi
 
 #############################################
@@ -104,9 +103,6 @@ chmod -R a+x /root/.bin
 #/etc/init.d/cron restart
 
 # Settings
-mv -fu /root/.etc/* -t /etc/opt
-rm -rf /root/.etc
-
 touch /etc/opt/chroot-services.list
 
 if [ "$ZERO" != '1' ]; then
@@ -116,7 +112,9 @@ else
 fi
 
 # PATH
-echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
+if [ -z "$(cat /root/.profile | grep 'PATH' | grep '\/root\/.bin')" ]; then
+  echo -e 'export PATH=$PATH:/root/.bin' >> /root/.profile
+fi
 
 # APT 2
 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
@@ -145,13 +143,17 @@ return_optware() {
   ipkg install htop mc screen patch py27-mercurial
 
   script_optware
-  echo 'ETC: fixing PATH for optware use'
-  echo 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
 }
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
   $QUO/init.d/wedro_optware.sh init
+
+  if [ -z "$(cat /etc/profile | grep 'PATH' | grep '\/opt\/')" ]; then
+    echo 'ETC: fixing PATH for optware use'
+    echo -e 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
+  fi
+
 }
 
 #######################################################################################
@@ -236,8 +238,6 @@ update_scripts() {
 }
 
 infect_update() {
-  ## Blah-blah
-  ## TODO: mount QUO in rootfs for infection & chroot info rootfs
   if [ -z "$2"]; then
     echo "[QUO]: no rootfs"
     exit 1
