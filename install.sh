@@ -133,12 +133,12 @@ source /root/.profile
 
 return_optware() {
   echo 'OPTWARE: installing...'
-  OLD_CWD=$CWD
+  OLD_PWD=$PWD
   cd /tmp
   ## FIXME  
   #cp $QUO/pkg/ipkg-opt_0.99.163-10_powerpc.ipk /tmp
   $QUO/sbin/setup-mybooklive.sh > /dev/null
-  cd $OLD_CWD
+  cd $OLD_PWD
   ipkg update
   ipkg install htop mc screen patch py27-mercurial
 
@@ -216,10 +216,10 @@ if [ ! -d $QUO/.hg ]; then
   echo -e '[hostfingerprints]\ncode.google.com = e2:9e:46:29:a0:fd:3c:57:a0:68:30:c5:0a:45:97:63:bf:8d:75:fc' >> $QUO/.hg/hgrc
   rm -rf $QUO.old
 else
-  OLD_CWD=$CWD
+  OLD_PWD=$PWD
   cd $QUO
   hg-py2.7 pull && hg-py2.7 update
-  cd $OLD_CWD
+  cd $OLD_PWD
 fi
 chmod a+x $QUO/install.sh
 chmod -R a+x $QUO/init.d
