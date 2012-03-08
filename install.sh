@@ -32,8 +32,8 @@ if [ ! -d $C_ROOT ]; then
   mkdir -p $C_ROOT/.bin
 fi
 if [ -z "$(mount | grep '\/DataVolume\/custom\/root')" ]; then
-  mv -fu /root/* $C_ROOT
-  mv -fu /root/.* $C_ROOT
+  mv -fu /root/* -t $C_ROOT
+  mv -fu /root/.* -t $C_ROOT
   mount --bind $C_ROOT /root
 fi
 
@@ -85,7 +85,7 @@ if [ -z "$(ls /opt)" ]; then
   OPTWARE='1'
 else
   script_optware
-  export PATH=$PATH:/opt/bin:/opt/sbin:/root/.bin
+  echo 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
 fi
 
 #############################################
@@ -117,7 +117,7 @@ chmod a+x /etc/cron.daily/mybooklive
 /etc/init.d/cron restart
 
 # Settings
-mv -fu /root/.etc/* /etc/opt
+mv -fu /root/.etc/* -t /etc/opt
 rm -rf /root/.etc
 
 touch /etc/opt/chroot-services.list
