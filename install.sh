@@ -24,38 +24,24 @@ return_quo() {
 echo 'Set up customizations =)'
 cd /
 
-## CURRENT magic
-
-# Mounting custom dirs
+## PREPARING Custom dirs
 if [ ! -d $C_ROOT ]; then
   mkdir -p $C_ROOT
   mkdir -p $C_ROOT/.bin
-fi
-if [ -z "$(mount | grep '\/DataVolume\/custom\/root')" ]; then
   mv -fu /root/* -t $C_ROOT
   mv -fu /root/.* -t $C_ROOT
-  mount --bind $C_ROOT /root
 fi
 
 if [ ! -d $C_OPT ]; then
   mkdir -p $C_OPT
 fi
-if [ -z "$(mount | grep '\/DataVolume\/custom\/opt')" ]; then
-  mount --bind $C_OPT /opt
-fi
 
 if [ ! -d $C_VAR ]; then
   mkdir -p $C_VAR
 fi
-if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
-  mount --bind $C_VAR /var/opt
-fi
 
 if [ ! -d $C_ETC ]; then
   mkdir -p $C_ETC
-fi
-if [ -z "$(mount | grep '\/DataVolume\/custom\/etc')" ]; then
-  mount --bind $C_ETC /etc/opt
 fi
 
 #############################################
@@ -75,7 +61,7 @@ $QUO/sbin/idle3ctl -d /dev/sda
 
 ## MOUNT magic
   echo 'MOUNT: enabling necessary binded mounts at boot'
-  $QUO/init.d/wedro_mount.sh install
+  $QUO/init.d/wedro_mount.sh init
 
 #############################################
 
@@ -131,6 +117,9 @@ fi
 # PATH
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
 
+# APT 2
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
+
 #############################################
 
 export PATH=$PATH:/root/.bin
@@ -161,7 +150,7 @@ return_optware() {
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
-  $QUO/init.d/wedro_optware.sh install
+  $QUO/init.d/wedro_optware.sh init
 }
 
 #######################################################################################
@@ -189,15 +178,7 @@ return_chroot() {
 
 script_chroot() {
   echo 'CHROOT: enabling debian custom services in chroot'
-  $QUO/init.d/wedro_chroot.sh install
-}
-
-#######################################################################################
-#######################################################################################
-
-update_packages() {
-  apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
-  apt-get update
+  $QUO/init.d/wedro_chroot.sh init
 }
 
 #######################################################################################
@@ -245,10 +226,15 @@ chmod -R a+x $QUO/sbin
 #######################################################################################
 
 update_scripts() {
-  SCRIPTS="$(ls $QUO/init.d)"
+  SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
+  if [ -z "$2" ]; then
+    SRCDIR="$QUO"
+  else
+    SRCDIR="$2"
+  fi
   for ITEM in $SCRIPTS; do
-    $QUO/init.d/$ITEM remove
-    $QUO/init.d/$ITEM install
+    $SRCDIR/init.d/$ITEM remove
+    $SRCDIR/init.d/$ITEM install
   done
 }
 
@@ -266,9 +252,6 @@ case "$1" in
     chroot)
         return_chroot
     ;;
-    apt)
-        update_packages
-    ;;
     renew)
         update_scripts
     ;;
@@ -279,14 +262,13 @@ case "$1" in
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*) | apt (*)}"
+        echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*) }"
         echo "(*) - internet connection and completed [init] section required"
         echo "(!) [setup] will do complete installation on new system: [init], [optware], [chroot] and [update]"
         echo "[init] will (re)set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
         echo "[optware] will install Optware into /opt"
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
         echo "[update] will update QUO with mercurial (install hg-py27 before if none detected)"
-        echo "[apt] will update packages in main system"
         exit 1
 esac
 
