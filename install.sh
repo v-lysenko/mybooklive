@@ -227,16 +227,26 @@ chmod -R a+x $QUO/sbin
 
 update_scripts() {
   SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
-  if [ -z "$2" ]; then
-    SRCDIR="$QUO"
-  else
-    SRCDIR="$2"
-  fi
   for ITEM in $SCRIPTS; do
-    $SRCDIR/init.d/$ITEM remove
-    $SRCDIR/init.d/$ITEM install
+    $QUO/init.d/$ITEM remove
+    $QUO/init.d/$ITEM install
   done
 }
+
+infect_update() {
+  ## Blah-blah
+  ## TODO: mount QUO in rootfs for infection & chroot info rootfs
+  if [ -z "$2"]; then
+    exit 1
+  else
+    SRCDIR="$2"
+    SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
+    for ITEM in $SCRIPTS; do
+      $RSCDIR/init.d/$ITEM install
+    done
+  fi
+}
+
 
 #######################################################################################
 #######################################################################################
@@ -252,14 +262,17 @@ case "$1" in
     chroot)
         return_chroot
     ;;
-    renew)
-        update_scripts
-    ;;
     update)
         update_quo
     ;;
     setup)
         do_zero
+    ;;
+    renew)
+        update_scripts
+    ;;
+    infect)
+        infect_update
     ;;
     *)
         echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*) }"
