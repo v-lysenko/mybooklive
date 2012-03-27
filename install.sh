@@ -127,6 +127,8 @@ return_optware() {
   #cp $QUO/pkg/ipkg-opt_0.99.163-10_powerpc.ipk /tmp
   $QUO/sbin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
+  ipkg update
+  ipkg install htop mc screen
 
   script_optware
   echo 'ETC: fixing PATH for optware use'
@@ -155,6 +157,8 @@ return_chroot() {
   debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $CHROOT_DIR http://ftp.ru.debian.org/debian/
   echo 'primary' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
+  chroot $CHROOT_DIR apt-get -y update
+  chroot $CHROOT_DIR apt-get -y install htop mc screen
 
   script_chroot
 }
