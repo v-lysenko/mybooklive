@@ -93,10 +93,6 @@ fi
 #############################################
 
 ## ETC magic
-if [ "$ZERO" != '1' ]; then
-  $QUO/sbin/configs.sh
-fi
-
 for BINARY in "$(ls $QUO/extra/bin)"; do
   cp $QUO/extra/bin/$BINARY /root/.bin
 done
@@ -107,6 +103,10 @@ for CONFIG in "$(ls $QUO/extra/etc)"; do
 done
 
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
+
+if [ "$ZERO" != '1' ]; then
+  /root/.bin/restore-configs.sh
+fi
 
 #############################################
 
