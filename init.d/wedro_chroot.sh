@@ -21,15 +21,17 @@ CUSTOM_VAR='/var/opt'
 CHROOT_DIR="$CUSTOM_VAR/chroot"
 CHROOT_SERVICES="$(cat /root/.etc/chroot-services)"
 
-
-if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
-    echo "CHROOT sems unmounted. exiting"
-    exit 1
-fi
+check_mounted() {
+  if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
+      echo "CHROOT sems unmounted. exiting"
+      exit 1
+  fi
+}
 
 #######################################################################
 
 start() {
+    check_mounted
     mount --bind /DataVolume/shares/common $CHROOT_DIR/mnt
 
     chroot $CHROOT_DIR mount -t proc none /proc -o rw,noexec,nosuid,nodev
@@ -42,6 +44,7 @@ start() {
 }
 
 stop() {
+    check_mounted
     for ITEM in $CHROOT_SERVICES; do
         chroot $CHROOT_DIR service $ITEM stop
     done
