@@ -237,8 +237,9 @@ case "$1" in
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {setup*|init|optware*|chroot*|apt*} (* - internet connection and completed [setup] section required)"
-        echo "[setup] will do complete installation on new system: [init], [optware], [chroot] and [update]"
+        echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*)| apt (*)}"
+        echo "(*) - internet connection and completed [init] section required"
+        echo "(!) [setup] will do complete installation on new system: [init], [optware], [chroot] and [update]"
         echo "[init] will (re)set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
         echo "[optware] will install Optware into /opt"
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
