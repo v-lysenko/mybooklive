@@ -183,12 +183,9 @@ do_zero() {
 
 update_quo() {
   echo 'UPDATE: starting...'
-  OLD_CWD=$CWD
-  cd ..
-  mv -f quo quo.old
-  wget -r -l inf -R html -nH --cut-dirs=1 -P quo -nv -c http://mybooklive.googlecode.com/hg/
-  chmod -v a+x quo/install.sh
-  cd $OLD_CWD
+  mv -f $QUO $QUO.old
+  wget -r -l inf -R html -nH --cut-dirs=1 -P $QUO -nv -c http://mybooklive.googlecode.com/hg/
+  chmod -v a+x $QUO/install.sh
   echo 'UPDATE: finished! You should inspect new scripts and run [renew] to install them'
 }
 
