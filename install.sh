@@ -184,7 +184,9 @@ do_zero() {
 update_quo() {
 #
   echo 'TODO'
-  update_scripts
+  wget -m -R html -nH --cut-dirs=1 -nv -c http://mybooklive.googlecode.com/hg/
+  chmod a+x $0
+#  update_scripts
 #
 }
 
