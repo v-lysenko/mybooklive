@@ -105,16 +105,13 @@ return_optware() {
   cd $OLD_CWD
 
   script_optware
+  echo 'ETC: fixing PATH for optware use'
+  echo 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
 }
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
-  cp $QUO/init.d/wedro_optware.sh /etc/init.d/wedro_optware.sh
-  chmod a+x /etc/init.d/wedro_optware.sh
-  update-rc.d wedro_optware.sh defaults 90 02 > /dev/null
-
-  echo 'ETC: fixing PATH for optware use'
-  echo 'export PATH=$PATH:/opt/bin:/opt/sbin' >> /etc/profile
+  . $QUO/init.d/wedro_optware.sh install
 }
 
 #######################################################################################
@@ -140,9 +137,7 @@ return_chroot() {
 
 script_chroot() {
   echo 'CHROOT: enabling debian custom services in chroot'
-  cp $QUO/init.d/wedro_chroot.sh /etc/init.d/wedro_chroot.sh
-  chmod a+x /etc/init.d/wedro_chroot.sh
-  update-rc.d wedro_chroot.sh defaults 99 01 > /dev/null
+  . $QUO/init.d/wedro_chroot.sh install
 }
 
 #######################################################################################
@@ -150,9 +145,7 @@ script_chroot() {
 
 script_mount() {
   echo 'MOUNT: enabling necessary binded mounts at boot'
-  cp $QUO/init.d/wedro_mount.sh /etc/init.d/wedro_mount.sh
-  chmod a+x /etc/init.d/wedro_mount.sh
-  update-rc.d wedro_mount.sh defaults 17 03 > /dev/null
+  . $QUO/init.d/wedro_mount.sh install
 }
 
 #######################################################################################
@@ -205,9 +198,8 @@ chmod a+x $QUO/install.sh
 #######################################################################################
 
 update_scripts() {
-  script_mount
-  script_optware
-  script_chroot
+  run-parts -a remove $QUO/init.d
+  run-parts -a install $QUO/init.d
 }
 
 #######################################################################################
