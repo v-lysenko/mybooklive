@@ -96,6 +96,8 @@ fi
 if [ "$ZERO" != '1' ]; then
   $QUO/bin/configs.sh
 fi
+cp $QUO/extra/mychroot.sh /root/.bin
+cp $QUO/extra/chroot-services /root/.etc
 
 #############################################
 
