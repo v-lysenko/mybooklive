@@ -48,7 +48,7 @@ apt-cache clean > /dev/null
 
 ## HDD magic
 echo 'HDD: fighting annoying parking'
-$QUO/bin/idle3ctl -d /dev/sda
+. $QUO/bin/idle3ctl -d /dev/sda
 
 #############################################
 
@@ -86,7 +86,7 @@ fi
 
 ## ETC magic
 if [ "$ZERO" != '1' ]; then
-  $QUO/bin/configs.sh
+  . $QUO/bin/configs.sh
 fi
 
 #############################################
@@ -104,7 +104,7 @@ return_optware() {
   echo 'OPTWARE: installing...'
   OLD_CWD=$CWD
   cd /root
-  $QUO/bin/setup-mybooklive.sh > /dev/null
+  . $QUO/bin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
 
   script_optware
