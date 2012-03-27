@@ -181,6 +181,24 @@ do_zero() {
 #######################################################################################
 #######################################################################################
 
+update_quo() {
+if [ -z "$(ipkg status py27-mercurial | grep 'Status:' | grep 'installed')" ]; then
+  ipkg install py27-mercurial
+  mv -f $QUO $QUO.old
+  hg-py2.7 clone https://dhameoelin@code.google.com/p/mybooklive/ $QUO
+  echo -e '[hostfingerprints]\ncode.google.com = e2:9e:46:29:a0:fd:3c:57:a0:68:30:c5:0a:45:97:63:bf:8d:75:fc' >> $QUO/.hg/hgrc
+  rm -rf $QUO.old
+fi
+OLD_CWD=$CWD
+cd $QUO
+hg-py27 pull && hg-py27 update
+chmod a+x $QUO/install.sh
+cd $OLD_CWD
+}
+
+#######################################################################################
+#######################################################################################
+
 update_scripts() {
   script_mount
   script_optware
@@ -192,7 +210,7 @@ update_scripts() {
 #######################################################################################
 
 case "$1" in
-    setup)
+    init)
         return_quo
     ;;
     optware)
@@ -207,17 +225,20 @@ case "$1" in
     renew)
         update_scripts
     ;;
+    update)
+        update_quo
+    ;;
     zero)
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {setup|optware*|chroot*|apt*|zero*|update*} (* - internet connection and completed [setup] section required)"
-        echo "[setup] will set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
+        echo $"Usage: $0 {init|optware*|chroot*|apt*|setup*} (* - internet connection and completed [setup] section required)"
+        echo "[init] will set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
         echo "[optware] will install Optware into /opt"
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
         echo "[apt] will update packages in main system"
-        echo "[zero] will do [setup], [optware] and [chroot]"
-#        echo "[renew] will reinstall scripts =)"
+        echo "[setup] will do complete installation on new system: [init], [optware] and [chroot]"
+        echo "[update] will update QUO with mercurial (install hg-py27 before if none detected)"
         exit 1
 esac
 
