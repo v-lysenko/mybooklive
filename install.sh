@@ -114,6 +114,7 @@ export PATH=$PATH:/root/.bin
 
 echo 'Returning finished!'
 echo 'Please REBOOT WD MyBook Live after you end ALL configurations!'
+source /root/.profile
 }
 
 #######################################################################################
