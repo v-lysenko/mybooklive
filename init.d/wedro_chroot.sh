@@ -4,6 +4,8 @@ SCRIPT_NAME='wedro_chroot.sh'
 SCRIPT_START='99'
 SCRIPT_STOP='01'
 
+MOUNT_DIR='/DataVolume/shares'
+
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
 # Required-Start:
@@ -41,7 +43,7 @@ check_mounted() {
 
 start() {
     check_mounted
-    mount --bind /DataVolume/shares/common $CHROOT_DIR/mnt
+    mount --bind $MOUNT_DIR $CHROOT_DIR/mnt
 
     chroot $CHROOT_DIR mount -t proc none /proc -o rw,noexec,nosuid,nodev
     chroot $CHROOT_DIR mount -t sysfs none /sys -o rw,noexec,nosuid,nodev
