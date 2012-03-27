@@ -103,7 +103,7 @@ done
 chmod -R a+x /root/.bin
 
 for CONFIG in "$(ls $QUO/extra/etc)"; do
-  cp $QUO/extra/bin/$CONFIG /root/.etc
+  cp $QUO/extra/etc/$CONFIG /root/.etc
 done
 
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
