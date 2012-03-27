@@ -182,16 +182,16 @@ do_zero() {
 #######################################################################################
 
 update_quo() {
-if [ -z "$(ipkg status py27-mercurial | grep 'Status:' | grep 'installed')" ]; then
-  ipkg install py27-mercurial
+if [ -z "$(/opt/bin/ipkg status py27-mercurial | grep 'Status:' | grep 'installed')" ]; then
+  /opt/bin/ipkg install py27-mercurial
   mv -f $QUO $QUO.old
-  hg-py2.7 clone https://dhameoelin@code.google.com/p/mybooklive/ $QUO
+  /opt/bin/hg-py2.7 clone https://dhameoelin@code.google.com/p/mybooklive/ $QUO
   echo -e '[hostfingerprints]\ncode.google.com = e2:9e:46:29:a0:fd:3c:57:a0:68:30:c5:0a:45:97:63:bf:8d:75:fc' >> $QUO/.hg/hgrc
   rm -rf $QUO.old
 fi
 OLD_CWD=$CWD
 cd $QUO
-hg-py27 pull && hg-py27 update
+/opt/bin/hg-py27 pull && /opt/bin/hg-py27 update
 chmod a+x $QUO/install.sh
 cd $OLD_CWD
 }
