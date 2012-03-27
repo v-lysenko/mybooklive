@@ -32,6 +32,8 @@ cd /root
 # Mounting custom dirs
 if [ ! -d $C_ROOT ]; then
   mkdir -p $C_ROOT
+  mkdir -p $C_ROOT/.etc
+  mkdir -p $C_ROOT/.bin
 fi
 mount --bind $C_ROOT /root
 
