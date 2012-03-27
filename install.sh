@@ -123,7 +123,8 @@ return_optware() {
   echo 'OPTWARE: installing...'
   OLD_CWD=$CWD
   cd /tmp
-  cp $QUO/pkg/ipkg-opt_0.99.163-10_powerpc.ipk /tmp
+  ## FIXME  
+  #cp $QUO/pkg/ipkg-opt_0.99.163-10_powerpc.ipk /tmp
   $QUO/sbin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
 
