@@ -96,9 +96,16 @@ fi
 if [ "$ZERO" != '1' ]; then
   $QUO/sbin/configs.sh
 fi
-cp $QUO/extra/mychroot.sh /root/.bin
+
+for BINARY in "$(ls $QUO/extra/bin)"; do
+  cp $QUO/extra/bin/$BINARY /root/.bin
+done
 chmod -R a+x /root/.bin
-cp $QUO/extra/chroot-services /root/.etc
+
+for CONFIG in "$(ls $QUO/extra/etc)"; do
+  cp $QUO/extra/bin/$CONFIG /root/.etc
+done
+
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
 
 #############################################
