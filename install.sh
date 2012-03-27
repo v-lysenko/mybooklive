@@ -176,6 +176,7 @@ do_zero() {
   if [ "$CHROOT" == '1' ]; then
     return_chroot
   fi
+  update_quo
 }
 
 #######################################################################################
@@ -232,17 +233,17 @@ case "$1" in
     update)
         update_quo
     ;;
-    zero)
+    setup)
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {init|optware*|chroot*|apt*|setup*} (* - internet connection and completed [setup] section required)"
-        echo "[init] will set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
+        echo $"Usage: $0 {setup*|init|optware*|chroot*|apt*} (* - internet connection and completed [setup] section required)"
+        echo "[setup] will do complete installation on new system: [init], [optware], [chroot] and [update]"
+        echo "[init] will (re)set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
         echo "[optware] will install Optware into /opt"
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
-        echo "[apt] will update packages in main system"
-        echo "[setup] will do complete installation on new system: [init], [optware] and [chroot]"
         echo "[update] will update QUO with mercurial (install hg-py27 before if none detected)"
+        echo "[apt] will update packages in main system"
         exit 1
 esac
 
