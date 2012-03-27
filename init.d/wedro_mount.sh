@@ -1,5 +1,22 @@
 #!/bin/sh
 
+SCRIPT_NAME='wedro_mount.sh'
+SCRIPT_START='17'
+SCRIPT_STOP='03'
+
+script_install() {
+  cp $0 /etc/init.d/$SCRIPT_NAME
+  chmod a+x /etc/init.d/$SCRIPT_NAME
+  update-rc.d $SCRIPT_NAME defaults $SCRIPT_START $SCRIPT_STOP > /dev/null
+}
+
+script_remove() {
+  update-rc.d -f $SCRIPT_NAME remove > /dev/null
+  rm -f /etc/init.d/$SCRIPT_NAME
+}
+
+#######################################################################
+
 CUSTOM="/DataVolume/custom"
 C_OPT="$CUSTOM/opt"
 C_ROOT="$CUSTOM/root"
@@ -73,7 +90,11 @@ case "$1" in
     restart)
         restart
     ;;
-    cleanup)
+    install)
+        script_install
+    ;;
+    remove)
+        script_remove
     ;;
     *)
         echo $"Usage: $0 {start|stop|restart}"

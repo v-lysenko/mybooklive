@@ -1,5 +1,22 @@
 #!/bin/sh
 
+SCRIPT_NAME='wedro_optware.sh'
+SCRIPT_START='90'
+SCRIPT_STOP='02'
+
+script_install() {
+  cp $0 /etc/init.d/$SCRIPT_NAME
+  chmod a+x /etc/init.d/$SCRIPT_NAME
+  update-rc.d $SCRIPT_NAME defaults $SCRIPT_START $SCRIPT_STOP > /dev/null
+}
+
+script_remove() {
+  update-rc.d -f $SCRIPT_NAME remove > /dev/null
+  rm -f /etc/init.d/$SCRIPT_NAME
+}
+
+#######################################################################
+
 start() {
 if [ -d /opt/etc/init.d ]; then
   echo "Launching Optware initialization scripts"
@@ -39,7 +56,11 @@ case "$1" in
     restart)
         restart
     ;;
-    cleanup)
+    install)
+        script_install
+    ;;
+    remove)
+        script_remove
     ;;
     *)
         echo $"Usage: $0 {start|stop|restart}"

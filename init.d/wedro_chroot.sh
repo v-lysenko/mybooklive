@@ -1,5 +1,22 @@
 #/bin/bash
 
+SCRIPT_NAME='wedro_chroot.sh'
+SCRIPT_START='99'
+SCRIPT_STOP='01'
+
+script_install() {
+  cp $0 /etc/init.d/$SCRIPT_NAME
+  chmod a+x /etc/init.d/$SCRIPT_NAME
+  update-rc.d $SCRIPT_NAME defaults $SCRIPT_START $SCRIPT_STOP > /dev/null
+}
+
+script_remove() {
+  update-rc.d -f $SCRIPT_NAME remove > /dev/null
+  rm -f /etc/init.d/$SCRIPT_NAME
+}
+
+#######################################################################
+
 CUSTOM_VAR='/var/opt'
 CHROOT_DIR="$CUSTOM_VAR/chroot"
 CHROOT_SERVICES="$(cat /root/.etc/chroot-services)"
@@ -69,9 +86,16 @@ case "$1" in
     upgrade)
         upgrade
     ;;
+    install)
+        script_install
+    ;;
+    remove)
+        script_remove
+    ;;
     *)
         echo $"Usage: $0 {start|stop|restart|update|upgrade}"
         exit 1
 esac
 
 exit $?
+
