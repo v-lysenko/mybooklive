@@ -97,6 +97,7 @@ if [ "$ZERO" != '1' ]; then
   $QUO/bin/configs.sh
 fi
 cp $QUO/extra/mychroot.sh /root/.bin
+chmod -R a+x /root/.bin
 cp $QUO/extra/chroot-services /root/.etc
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
 
