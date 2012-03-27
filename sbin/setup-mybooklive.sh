@@ -7,4 +7,4 @@ mv /opt/bin/ipkg /opt/bin/ipkg.bin
 echo '#!/bin/sh' > /opt/bin/ipkg
 echo 'PATH=/opt/bin:$PATH /opt/bin/ipkg.bin $@' >> /opt/bin/ipkg
 chmod +x /opt/bin/ipkg
-rm $ipk_name
+#rm $ipk_name

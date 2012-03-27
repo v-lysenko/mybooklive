@@ -13,7 +13,7 @@ CHROOT_DIR='/var/opt/chroot'
 
 if [ -d $QUO ]; then
   chmod -R a+x $QUO/init.d
-  chmod -R a+x $QUO/bin
+  chmod -R a+x $QUO/sbin
   chmod a+x $QUO/install.sh
 fi
 
@@ -58,7 +58,7 @@ apt-cache clean > /dev/null
 
 ## HDD magic
 echo 'HDD: fighting annoying parking'
-$QUO/bin/idle3ctl -d /dev/sda
+$QUO/sbin/idle3ctl -d /dev/sda
 
 #############################################
 
@@ -94,7 +94,7 @@ fi
 
 ## ETC magic
 if [ "$ZERO" != '1' ]; then
-  $QUO/bin/configs.sh
+  $QUO/sbin/configs.sh
 fi
 cp $QUO/extra/mychroot.sh /root/.bin
 chmod -R a+x /root/.bin
@@ -116,7 +116,7 @@ return_optware() {
   echo 'OPTWARE: installing...'
   OLD_CWD=$CWD
   cd /root
-  $QUO/bin/setup-mybooklive.sh > /dev/null
+  $QUO/sbin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
 
   script_optware
@@ -133,7 +133,7 @@ script_optware() {
 #######################################################################################
 
 return_chroot() {
-  dpkg -i $QUO/deb/debootstrap_1.0.10lenny1_all.deb > /dev/null
+  dpkg -i $QUO/pkg/debootstrap_1.0.10lenny1_all.deb > /dev/null
   ln -s -f /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
   if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
     echo "CHROOT: custom /VAR was unmounted. Fixing..."
@@ -201,7 +201,7 @@ else
 fi
 chmod a+x $QUO/install.sh
 chmod -R a+x $QUO/init.d
-chmod -R a+x $QUO/bin
+chmod -R a+x $QUO/sbin
 }
 
 #######################################################################################
