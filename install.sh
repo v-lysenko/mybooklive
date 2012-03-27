@@ -181,14 +181,6 @@ do_zero() {
 #######################################################################################
 #######################################################################################
 
-update_quo() {
-  echo 'UPDATE: starting...'
-  mv -f $QUO $QUO.old
-  wget -r -l inf -R html -nH --cut-dirs=1 -P $QUO -nv -c http://mybooklive.googlecode.com/hg/
-  chmod -v a+x $QUO/install.sh
-  echo 'UPDATE: finished! You should inspect new scripts and run [renew] to install them'
-}
-
 update_scripts() {
   script_mount
   script_optware
@@ -212,9 +204,6 @@ case "$1" in
     apt)
         update_packages
     ;;
-    update)
-        update_quo
-    ;;
     renew)
         update_scripts
     ;;
@@ -228,7 +217,7 @@ case "$1" in
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
         echo "[apt] will update packages in main system"
         echo "[zero] will do [setup], [optware] and [chroot]"
-        echo "[update] will update QUO system =)"
+#        echo "[renew] will reinstall scripts =)"
         exit 1
 esac
 
