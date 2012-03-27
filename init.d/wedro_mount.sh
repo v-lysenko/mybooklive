@@ -4,14 +4,14 @@ SCRIPT_NAME='wedro_mount.sh'
 SCRIPT_START='17'
 SCRIPT_STOP='03'
 
- ### BEGIN INIT INFO
- # Provides:          $SCRIPT_NAME
- # Required-Start:
- # Required-Stop:
- # X-Start-Before:
- # Default-Start:     2 3 4 5
- # Default-Stop:
- ### END INIT INFO
+### BEGIN INIT INFO
+# Provides:          $SCRIPT_NAME
+# Required-Start:
+# Required-Stop:
+# X-Start-Before:
+# Default-Start:     2 3 4 5
+# Default-Stop:
+### END INIT INFO
 
 script_install() {
   cp $0 /etc/init.d/$SCRIPT_NAME
