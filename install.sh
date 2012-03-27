@@ -53,10 +53,7 @@ echo 'HDD: fighting annoying parking'
 #############################################
 
 ## MOUNT magic
-echo 'MOUNT: enabling necessary binded mounts at boot'
-cp $QUO/init.d/wedro_mount.sh /etc/init.d/wedro_mount.sh
-chmod a+x /etc/init.d/wedro_mount.sh
-update-rc.d wedro_mount.sh defaults 17 03 > /dev/null
+script_mount
 
 #############################################
 
@@ -151,6 +148,16 @@ script_chroot() {
 #######################################################################################
 #######################################################################################
 
+script_mount() {
+  echo 'MOUNT: enabling necessary binded mounts at boot'
+  cp $QUO/init.d/wedro_mount.sh /etc/init.d/wedro_mount.sh
+  chmod a+x /etc/init.d/wedro_mount.sh
+  update-rc.d wedro_mount.sh defaults 17 03 > /dev/null
+}
+
+#######################################################################################
+#######################################################################################
+
 update_packages() {
   apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
   apt-get update
@@ -173,6 +180,22 @@ do_zero() {
 
 #######################################################################################
 #######################################################################################
+
+update_quo() {
+#
+  echo 'TODO'
+  update_scripts
+#
+}
+
+update_scripts() {
+  script_mount
+  script_optware
+  script_chroot
+}
+
+#######################################################################################
+#######################################################################################
 #######################################################################################
 
 case "$1" in
@@ -185,19 +208,23 @@ case "$1" in
     chroot)
         return_chroot
     ;;
-    update)
+    apt)
         update_packages
+    ;;
+    update)
+        update_quo
     ;;
     zero)
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {setup|optware*|chroot*|update*|zero*} (* - internet connection and completed [setup] section required)"
+        echo $"Usage: $0 {setup|optware*|chroot*|apt*|zero*|update*} (* - internet connection and completed [setup] section required)"
         echo "[setup] will set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
         echo "[optware] will install Optware into /opt"
         echo "[chroot] will install Debian testing via debootstrap into $CHROOT_DIR"
-        echo "[update] will update packages in main system"
+        echo "[apt] will update packages in main system"
         echo "[zero] will do [setup], [optware] and [chroot]"
+        echo "[update] will update QUO system =)"
         exit 1
 esac
 
