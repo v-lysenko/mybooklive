@@ -139,7 +139,7 @@ return_chroot() {
     echo "CHROOT: chroot dir was absent. Fixing..."
     mkdir -p $CHROOT_DIR
   fi
-  debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude --no-check-gpg testing $CHROOT_DIR http://ftp.ru.debian.org/debian/
+  debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $CHROOT_DIR http://ftp.ru.debian.org/debian/
   echo 'primary' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
 
@@ -181,6 +181,7 @@ do_zero() {
 update_quo() {
 PATH="$PATH:/opt/sbin:/opt/bin"
 if [ -z "$(ipkg status py27-mercurial | grep 'Status:' | grep 'installed')" ]; then
+  ipkg update
   ipkg install py27-mercurial
 fi
 if [ ! -d $QUO/.hg ]; then
