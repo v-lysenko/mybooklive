@@ -237,7 +237,7 @@ case "$1" in
         do_zero
     ;;
     *)
-        echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*)| apt (*)}"
+        echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*) | apt (*)}"
         echo "(*) - internet connection and completed [init] section required"
         echo "(!) [setup] will do complete installation on new system: [init], [optware], [chroot] and [update]"
         echo "[init] will (re)set up scripts and configs & mount /opt, /root and /var/opt into /DataVolume"
