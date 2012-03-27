@@ -9,8 +9,13 @@ QUO="$CUSTOM/quo"
 
 CHROOT_DIR='/var/opt/chroot'
 
-chmod -R a+x $QUO/init.d
-chmod -R a+x $QUO/bin
+#############################################
+
+if [ -d $QUO ]; then
+  chmod -R a+x $QUO/init.d
+  chmod -R a+x $QUO/bin
+  chmod a+x $QUO/install.sh
+fi
 
 #############################################
 
