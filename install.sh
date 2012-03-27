@@ -59,13 +59,6 @@ $QUO/bin/idle3ctl -d /dev/sda
   echo 'MOUNT: enabling necessary binded mounts at boot'
   $QUO/init.d/wedro_mount.sh install
 
-  script_mount
-
-script_mount() {
-  echo 'MOUNT: enabling necessary binded mounts at boot'
-  $QUO/init.d/wedro_mount.sh install
-}
-
 #############################################
 
 ## OPTWARE magic
