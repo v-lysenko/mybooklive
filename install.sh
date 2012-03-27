@@ -9,6 +9,9 @@ QUO="$CUSTOM/quo"
 
 CHROOT_DIR='/var/opt/chroot'
 
+chmod -R a+x $QUO/init.d
+chmod -R a+x $QUO/bin
+
 #############################################
 
 return_quo() {
@@ -48,12 +51,20 @@ apt-cache clean > /dev/null
 
 ## HDD magic
 echo 'HDD: fighting annoying parking'
-. $QUO/bin/idle3ctl -d /dev/sda
+$QUO/bin/idle3ctl -d /dev/sda
 
 #############################################
 
 ## MOUNT magic
-script_mount
+  echo 'MOUNT: enabling necessary binded mounts at boot'
+  $QUO/init.d/wedro_mount.sh install
+
+  script_mount
+
+script_mount() {
+  echo 'MOUNT: enabling necessary binded mounts at boot'
+  $QUO/init.d/wedro_mount.sh install
+}
 
 #############################################
 
@@ -83,7 +94,7 @@ fi
 
 ## ETC magic
 if [ "$ZERO" != '1' ]; then
-  . $QUO/bin/configs.sh
+  $QUO/bin/configs.sh
 fi
 
 #############################################
@@ -101,7 +112,7 @@ return_optware() {
   echo 'OPTWARE: installing...'
   OLD_CWD=$CWD
   cd /root
-  . $QUO/bin/setup-mybooklive.sh > /dev/null
+  $QUO/bin/setup-mybooklive.sh > /dev/null
   cd $OLD_CWD
 
   script_optware
@@ -111,7 +122,7 @@ return_optware() {
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
-  . $QUO/init.d/wedro_optware.sh install
+  $QUO/init.d/wedro_optware.sh install
 }
 
 #######################################################################################
@@ -137,15 +148,7 @@ return_chroot() {
 
 script_chroot() {
   echo 'CHROOT: enabling debian custom services in chroot'
-  . $QUO/init.d/wedro_chroot.sh install
-}
-
-#######################################################################################
-#######################################################################################
-
-script_mount() {
-  echo 'MOUNT: enabling necessary binded mounts at boot'
-  . $QUO/init.d/wedro_mount.sh install
+  $QUO/init.d/wedro_chroot.sh install
 }
 
 #######################################################################################
@@ -192,14 +195,19 @@ else
   cd $OLD_CWD
 fi
 chmod a+x $QUO/install.sh
+chmod -R a+x $QUO/init.d
+chmod -R a+x $QUO/bin
 }
 
 #######################################################################################
 #######################################################################################
 
 update_scripts() {
-  run-parts -a remove $QUO/init.d
-  run-parts -a install $QUO/init.d
+  SCRIPTS="$(ls $QUO/init.d)"
+  for ITEM in $SCRIPTS; do
+    $QUO/init.d/$ITEM remove
+    $QUO/init.d/$ITEM install
+  done
 }
 
 #######################################################################################

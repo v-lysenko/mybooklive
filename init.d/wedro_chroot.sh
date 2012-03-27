@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/sh
 
 SCRIPT_NAME='wedro_chroot.sh'
 SCRIPT_START='99'
