@@ -129,7 +129,7 @@ script_optware() {
 #######################################################################################
 
 return_chroot() {
-  dpkg -i $QUO/deb/debootstrap_1.0.10lenny1_all.deb
+  dpkg -i $QUO/deb/debootstrap_1.0.10lenny1_all.deb > /dev/null
   ln -s /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
   if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
     echo "CHROOT: custom /VAR was unmounted. Fixing..."
