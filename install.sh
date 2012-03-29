@@ -98,14 +98,21 @@ for BINARY in "$(ls $QUO/extra/bin)"; do
 done
 chmod -R a+x /root/.bin
 
-echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
+# CRON
+cp $QUO/extra/cron/mybooklive /etc/cron.daily
+/etc/init.d/cron restart
 
 # Settings
 touch /root/.etc/chroot-services.list
-touch /root/.etc/restore-configs.sh
+
 if [ "$ZERO" != '1' ]; then
   /root/.etc/restore-configs.sh
+else
+  touch /root/.etc/restore-configs.sh
 fi
+
+# PATH
+echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
 
 #############################################
 
