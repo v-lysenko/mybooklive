@@ -98,14 +98,13 @@ for BINARY in "$(ls $QUO/extra/bin)"; do
 done
 chmod -R a+x /root/.bin
 
-for CONFIG in "$(ls $QUO/extra/etc)"; do
-  cp $QUO/extra/etc/$CONFIG /root/.etc
-done
-
 echo 'export PATH=$PATH:/root/.bin' >> /root/.profile
 
+# Settings
+touch /root/.etc/chroot-services.list
+touch /root/.etc/restore-configs.sh
 if [ "$ZERO" != '1' ]; then
-  /root/.bin/restore-configs.sh
+  /root/.etc/restore-configs.sh
 fi
 
 #############################################

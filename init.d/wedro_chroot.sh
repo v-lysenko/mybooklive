@@ -30,7 +30,7 @@ script_remove() {
 
 CUSTOM_VAR='/var/opt'
 CHROOT_DIR="$CUSTOM_VAR/chroot"
-CHROOT_SERVICES="$(cat /root/.etc/chroot-services)"
+CHROOT_SERVICES="$(cat /root/.etc/chroot-services.list)"
 
 check_mounted() {
   if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
