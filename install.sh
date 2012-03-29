@@ -54,7 +54,7 @@ echo 'APT: holding udev, enabling lenny repos instead of squeeze'
 aptitude hold udev > /dev/null
 sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
 echo 'deb http://ftp.us.debian.org/debian/ lenny main' >> /etc/apt/sources.list
-apt-cache clean > /dev/null
+aptitude clean > /dev/null
 
 ## HDD magic
 echo 'HDD: fighting annoying parking'
@@ -93,6 +93,8 @@ fi
 #############################################
 
 ## ETC magic
+locale-gen
+
 for BINARY in "$(ls $QUO/extra/bin)"; do
   cp $QUO/extra/bin/$BINARY /root/.bin
 done
