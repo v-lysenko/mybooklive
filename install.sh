@@ -102,6 +102,7 @@ chmod -R a+x /root/.bin
 
 # CRON
 cp $QUO/extra/cron/mybooklive /etc/cron.daily
+chmod a+x /etc/cron.daily/mybooklive
 /etc/init.d/cron restart
 
 # Settings
