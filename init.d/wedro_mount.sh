@@ -30,6 +30,7 @@ CUSTOM="/DataVolume/custom"
 C_OPT="$CUSTOM/opt"
 C_ROOT="$CUSTOM/root"
 C_VAR="$CUSTOM/var"
+C_ETC="$CUSTOM/etc"
 
 ###################################################
 
@@ -55,6 +56,13 @@ else
   echo "Error: VAR/OPT seems already mounted" >&2
 fi
 
+if [ -z "$(mount | grep '\/etc\/opt')" ]; then
+  echo "Mounting ETC/OPT"
+  mount --bind $C_ETC /etc/opt
+else
+  echo "Error: ETC/OPT seems already mounted" >&2
+fi
+
 }
 
 stop() {
@@ -77,6 +85,13 @@ if [ -n "$(mount | grep '\/var\/opt')" ]; then
   umount /var/opt
 else
   echo "Error: VAR/OPT seems already unmounted" >&2
+fi
+
+if [ -n "$(mount | grep '\/etc\/opt')" ]; then
+  echo "Unmounting ETC/OPT"
+  umount /etc/opt
+else
+  echo "Error: ETC/OPT seems already unmounted" >&2
 fi
 
 }

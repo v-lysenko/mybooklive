@@ -4,6 +4,7 @@ CUSTOM="/DataVolume/custom"
 C_ROOT="$CUSTOM/root"
 C_OPT="$CUSTOM/opt"
 C_VAR="$CUSTOM/var"
+C_ETC="$CUSTOM/etc"
 
 QUO="$CUSTOM/quo"
 
@@ -24,28 +25,38 @@ echo 'Set up customizations =)'
 cd /
 
 ## CURRENT magic
-# Cleaning root
-rm -rf /root/* > /dev/null
-mkdir -p /root
-cd /root
 
 # Mounting custom dirs
 if [ ! -d $C_ROOT ]; then
   mkdir -p $C_ROOT
-  mkdir -p $C_ROOT/.etc
   mkdir -p $C_ROOT/.bin
 fi
-mount --bind $C_ROOT /root
+if [ -z "$(mount | grep '\/DataVolume\/custom\/root')" ]; then
+  mv -fu /root/* $C_ROOT
+  mv -fu /root/.* $C_ROOT
+  mount --bind $C_ROOT /root
+fi
 
 if [ ! -d $C_OPT ]; then
   mkdir -p $C_OPT
 fi
-mount --bind $C_OPT /opt
+if [ -z "$(mount | grep '\/DataVolume\/custom\/opt')" ]; then
+  mount --bind $C_OPT /opt
+fi
 
 if [ ! -d $C_VAR ]; then
   mkdir -p $C_VAR
 fi
-mount --bind $C_VAR /var/opt
+if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
+  mount --bind $C_VAR /var/opt
+fi
+
+if [ ! -d $C_ETC ]; then
+  mkdir -p $C_ETC
+fi
+if [ -z "$(mount | grep '\/DataVolume\/custom\/etc')" ]; then
+  mount --bind $C_ETC /etc/opt
+fi
 
 #############################################
 
@@ -106,12 +117,15 @@ chmod a+x /etc/cron.daily/mybooklive
 /etc/init.d/cron restart
 
 # Settings
-touch /root/.etc/chroot-services.list
+mv -fu /root/.etc/* /etc/opt
+rm -rf /root/.etc
+
+touch /etc/opt/chroot-services.list
 
 if [ "$ZERO" != '1' ]; then
-  /root/.etc/restore-configs.sh
+  /etc/opt/restore-configs.sh
 else
-  touch /root/.etc/restore-configs.sh
+  touch /etc/opt/restore-configs.sh
 fi
 
 # PATH
