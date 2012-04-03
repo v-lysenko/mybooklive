@@ -198,7 +198,9 @@ do_zero() {
     return_chroot
   fi
   update_quo
-  $QUO/infect/wedroInfectRootfs.sh
+
+  ## "Infect" firmware 
+  #$QUO/infect/wedroInfectRootfs.sh
 }
 
 #######################################################################################
@@ -242,12 +244,13 @@ infect_update() {
     echo "[QUO]: no rootfs"
     exit 1
   else
-    mount --bind "$QUO" "$2/opt"
-    SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
-    for ITEM in "$SCRIPTS"; do
-      chroot "$2" "$2/opt/init.d/$ITEM" install
-    done
-    umount "$2/opt"
+    echo "TODO: \"Infect\" firmware"
+    #mount --bind "$QUO" "$2/opt"
+    #SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
+    #for ITEM in "$SCRIPTS"; do
+    #  chroot "$2" "$2/opt/init.d/$ITEM" install
+    #done
+    #umount "$2/opt"
   fi
 }
 
