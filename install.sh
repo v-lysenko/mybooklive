@@ -215,7 +215,7 @@ fi
 if [ ! -d $QUO/.hg ]; then
   mv -f $QUO $QUO.old
   hg-py2.7 clone https://dhameoelin@code.google.com/p/mybooklive/ $QUO
-  echo -e '[hostfingerprints]\ncode.google.com = e2:9e:46:29:a0:fd:3c:57:a0:68:30:c5:0a:45:97:63:bf:8d:75:fc' >> $QUO/.hg/hgrc
+#  echo -e '[hostfingerprints]\ncode.google.com = e2:9e:46:29:a0:fd:3c:57:a0:68:30:c5:0a:45:97:63:bf:8d:75:fc' >> $QUO/.hg/hgrc
   rm -rf $QUO.old
 else
   OLD_PWD=$PWD
