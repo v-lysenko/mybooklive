@@ -49,9 +49,9 @@ fi
 
 ## APT magic
 echo 'APT: holding udev, enabling lenny repos instead of squeeze'
-aptitude hold udev > /dev/null
+aptitude hold udev apt apt-utils aptitude apache2-common > /dev/null
 sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
-echo 'deb http://ftp.us.debian.org/debian/ lenny main' >> /etc/apt/sources.list
+echo 'deb http://archive.debian.org/debian/ lenny main' >> /etc/apt/sources.list
 aptitude clean > /dev/null
 
 ## HDD magic
