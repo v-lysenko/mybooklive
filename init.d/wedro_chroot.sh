@@ -77,6 +77,10 @@ upgrade() {
     chroot $CHROOT_DIR apt-get dist-upgrade
 }
 
+upgrade_system() {
+    chroot $CHROOT_DIR apt-get dist-upgrade
+}
+
 #######################################################################
 
 case "$1" in
@@ -97,6 +101,9 @@ case "$1" in
     upgrade)
         upgrade
     ;;
+    upgrade-system)
+        upgrade_system
+    ;;
     install)
         script_install
     ;;
@@ -111,7 +118,7 @@ case "$1" in
         script_remove
     ;;
     *)
-        echo $"Usage: $0 {start|stop|restart|update|upgrade}"
+        echo $"Usage: $0 {start|stop|restart|update|upgrade|upgrade-system}"
         exit 1
 esac
 
