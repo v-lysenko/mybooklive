@@ -78,7 +78,7 @@ upgrade() {
 }
 
 upgrade_system() {
-    chroot $CHROOT_DIR apt-get dist-upgrade
+    chroot $CHROOT_DIR upgrade-system
 }
 
 #######################################################################
@@ -123,4 +123,3 @@ case "$1" in
 esac
 
 exit $?
-
