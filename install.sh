@@ -48,7 +48,7 @@ fi
 #############################################
 
 ## APT magic
-echo 'APT: holding udev, apt, apt-utils, aptitude, apache2.2-common, enabling lenny repos instead of squeeze'
+echo 'APT: holding udev, enabling lenny repos instead of squeeze'
 aptitude hold udev > /dev/null
 sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
 echo 'deb http://archive.debian.org/debian/ lenny main' >> /etc/apt/sources.list
