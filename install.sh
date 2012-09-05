@@ -176,7 +176,7 @@ return_chroot() {
   echo 'primary' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
   chroot $CHROOT_DIR apt-get -y update
-  chroot $CHROOT_DIR apt-get -y install htop mc screen
+  chroot $CHROOT_DIR apt-get -y install htop mc screen upgrade-system
 
   script_chroot
 }
