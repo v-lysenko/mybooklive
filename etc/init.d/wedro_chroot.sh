@@ -39,10 +39,18 @@ check_mounted() {
   fi
 }
 
+check_unmounted() {
+  if [ -n "$(mount | grep $CHROOT_DIR)" ]; then
+      echo "CHROOT sems mounted. exiting"
+      exit 1
+  fi
+}
+
+
 #######################################################################
 
 start() {
-    check_mounted
+    check_unmounted
     mount --bind $MOUNT_DIR $CHROOT_DIR/mnt
 
     chroot $CHROOT_DIR mount -t proc none /proc -o rw,noexec,nosuid,nodev
