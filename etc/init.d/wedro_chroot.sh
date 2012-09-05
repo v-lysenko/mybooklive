@@ -33,7 +33,7 @@ CHROOT_DIR="$CUSTOM_VAR/chroot"
 CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
 
 check_mounted() {
-  if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
+  if [ -z "$(mount | grep $CHROOT_DIR)" ]; then
       echo "CHROOT sems unmounted. exiting"
       exit 1
   fi
@@ -69,20 +69,6 @@ stop() {
 
 #######################################################################
 
-update() {
-    chroot $CHROOT_DIR apt-get update
-}
-
-upgrade() {
-    chroot $CHROOT_DIR apt-get dist-upgrade
-}
-
-upgrade_system() {
-    chroot $CHROOT_DIR upgrade-system
-}
-
-#######################################################################
-
 case "$1" in
     start)
         start
@@ -94,15 +80,6 @@ case "$1" in
         stop
         sleep 1
         start
-    ;;
-    update)
-        update
-    ;;
-    upgrade)
-        upgrade
-    ;;
-    upgrade-system)
-        upgrade_system
     ;;
     install)
         script_install

@@ -1,4 +1,4 @@
 #!/bin/sh
 # update MyBook Live customizations
-/DataVolume/quo/install.sh update
+#/DataVolume/quo/install.sh update
 

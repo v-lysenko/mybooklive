@@ -13,9 +13,9 @@ CHROOT_DIR='/var/opt/chroot'
 #############################################
 
 if [ -d $QUO ]; then
-  chmod -R a+x $QUO/init.d
+  chmod -R a+x $QUO/etc
   chmod -R a+x $QUO/sbin
-  chmod a+x $QUO/infect/wedroInfectRootfs.sh
+  chmod a+x $QUO/extra/infect/wedroInfectRootfs.sh
   chmod a+x $QUO/install.sh
 fi
 
@@ -62,7 +62,7 @@ $QUO/sbin/idle3ctl -d /dev/sda
 
 ## MOUNT magic
   echo 'MOUNT: enabling necessary binded mounts at boot'
-  $QUO/init.d/wedro_mount.sh init
+  $QUO/etc/init.d/wedro_mount.sh init
 
 #############################################
 
@@ -127,7 +127,7 @@ export PATH=$PATH:/root/.bin
 
 echo 'Returning finished!'
 echo 'Please REBOOT WD MyBook Live after you end ALL configurations!'
-source /root/.profile
+source /etc/profile
 }
 
 #######################################################################################
@@ -149,7 +149,7 @@ return_optware() {
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
-  $QUO/init.d/wedro_optware.sh init
+  $QUO/etc/init.d/wedro_optware.sh init
 
   if [ -z "$(cat /etc/profile | grep 'PATH' | grep '\/opt\/')" ]; then
     echo 'ETC: fixing PATH for optware use'
@@ -162,7 +162,7 @@ script_optware() {
 #######################################################################################
 
 return_chroot() {
-  dpkg -i $QUO/pkg/debootstrap_1.0.10lenny1_all.deb > /dev/null
+  dpkg -i $QUO/extra/pkg/debootstrap_1.0.10lenny1_all.deb > /dev/null
   ln -s -f /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
   if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
     echo "CHROOT: custom /VAR was unmounted. Fixing..."
@@ -176,14 +176,14 @@ return_chroot() {
   echo 'primary' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
   chroot $CHROOT_DIR apt-get -y update
-  chroot $CHROOT_DIR apt-get -y install htop mc screen upgrade-system
+  chroot $CHROOT_DIR apt-get -y install htop mc screen
 
   script_chroot
 }
 
 script_chroot() {
   echo 'CHROOT: enabling debian custom services in chroot'
-  $QUO/init.d/wedro_chroot.sh init
+  $QUO/etc/init.d/wedro_chroot.sh init
 }
 
 #######################################################################################
@@ -202,7 +202,7 @@ do_zero() {
   update_quo
 
   ## "Infect" firmware 
-  #$QUO/infect/wedroInfectRootfs.sh
+  #$QUO/extra/infect/wedroInfectRootfs.sh
 }
 
 #######################################################################################
@@ -226,7 +226,7 @@ else
   cd $OLD_PWD
 fi
 chmod a+x $QUO/install.sh
-chmod -R a+x $QUO/init.d
+chmod -R a+x $QUO/etc/init.d
 chmod -R a+x $QUO/sbin
 }
 
@@ -236,8 +236,8 @@ chmod -R a+x $QUO/sbin
 update_scripts() {
   SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
   for ITEM in $SCRIPTS; do
-    $QUO/init.d/$ITEM remove
-    $QUO/init.d/$ITEM install
+    $QUO/etc/init.d/$ITEM remove
+    $QUO/etc/init.d/$ITEM install
   done
 }
 
