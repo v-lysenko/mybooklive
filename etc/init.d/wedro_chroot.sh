@@ -6,6 +6,10 @@ SCRIPT_STOP='01'
 
 MOUNT_DIR='/DataVolume/shares'
 
+CUSTOM_VAR='/var/opt'
+CHROOT_DIR="$CUSTOM_VAR/chroot"
+CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
+
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
 # Required-Start:
@@ -28,10 +32,6 @@ script_remove() {
 
 #######################################################################
 
-CUSTOM_VAR='/var/opt'
-CHROOT_DIR="$CUSTOM_VAR/chroot"
-CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
-
 check_mounted() {
   if [ -z "$(mount | grep $CHROOT_DIR)" ]; then
       echo "CHROOT sems unmounted. exiting"
@@ -52,6 +52,7 @@ check_unmounted() {
 start() {
     check_unmounted
     mount --bind $MOUNT_DIR $CHROOT_DIR/mnt
+    mount --bind /opt $CHROOT_DIR/opt
 
     chroot $CHROOT_DIR mount -t proc none /proc -o rw,noexec,nosuid,nodev
     chroot $CHROOT_DIR mount -t sysfs none /sys -o rw,noexec,nosuid,nodev
@@ -72,6 +73,7 @@ stop() {
     chroot $CHROOT_DIR umount /sys
     chroot $CHROOT_DIR umount /proc
 
+    umount $CHROOT_DIR/opt
     umount $CHROOT_DIR/mnt
 }
 

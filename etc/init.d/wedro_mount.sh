@@ -62,7 +62,6 @@ if [ -z "$(mount | grep '\/etc\/opt')" ]; then
 else
   echo "Error: ETC/OPT seems already mounted" >&2
 fi
-
 }
 
 stop() {
@@ -93,7 +92,6 @@ if [ -n "$(mount | grep '\/etc\/opt')" ]; then
 else
   echo "Error: ETC/OPT seems already unmounted" >&2
 fi
-
 }
 
 #######################################################################
