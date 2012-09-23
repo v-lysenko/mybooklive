@@ -1,16 +1,16 @@
 #!/bin/sh
 
 SCRIPT_NAME='wedro_mount.sh'
-SCRIPT_START='17'
-SCRIPT_STOP='03'
+SCRIPT_START='01'
+SCRIPT_STOP='99'
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
 # Required-Start:
-# Required-Stop:
+# Required-Stop:     wedro_chroot.sh
 # X-Start-Before:
 # Default-Start:     2 3 4 5
-# Default-Stop:
+# Default-Stop:      0 6
 ### END INIT INFO
 
 script_install() {
@@ -104,10 +104,9 @@ case "$1" in
         stop
     ;;
     restart)
-        /etc/init.d/wedro_chroot.sh stop
         stop
+        sleep 1
         start
-        /etc/init.d/wedro_chroot.sh start
     ;;
     install)
         script_install

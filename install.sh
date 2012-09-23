@@ -48,11 +48,11 @@ fi
 #############################################
 
 ## APT magic
-echo 'APT: holding udev, enabling lenny repos instead of squeeze'
-aptitude hold udev > /dev/null
-sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
-echo 'deb http://archive.debian.org/debian/ lenny main' >> /etc/apt/sources.list
-aptitude clean > /dev/null
+#echo 'APT: holding udev, enabling lenny repos instead of squeeze'
+#aptitude hold udev
+#sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
+#echo 'deb http://archive.debian.org/debian/ lenny main' >> /etc/apt/sources.list
+#aptitude clean > /dev/null
 
 ## HDD magic
 echo 'HDD: fighting annoying parking'
@@ -115,19 +115,19 @@ fi
 
 # PATH
 if [ -z "$(cat /root/.profile | grep 'PATH' | grep '\/root\/.bin')" ]; then
-  echo -e 'export PATH=$PATH:/root/.bin' >> /root/.profile
+  echo -e 'export PATH=$PATH:/root/.bin' >> /etc/profile
 fi
 
 # APT 2
-apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
+#apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
 
 #############################################
 
 export PATH=$PATH:/root/.bin
 
 echo 'Returning finished!'
-echo 'Please REBOOT WD MyBook Live after you end ALL configurations!'
-source /etc/profile
+echo 'WD MyBook Live will REBOOT!'
+reboot
 }
 
 #######################################################################################
@@ -149,7 +149,7 @@ return_optware() {
 
 script_optware() {
   echo 'OPTWARE: enabling init scripts'
-  $QUO/etc/init.d/wedro_optware.sh init
+  $QUO/etc/init.d/wedro_optware.sh install
 
   if [ -z "$(cat /etc/profile | grep 'PATH' | grep '\/opt\/')" ]; then
     echo 'ETC: fixing PATH for optware use'
@@ -183,7 +183,7 @@ return_chroot() {
 
 script_chroot() {
   echo 'CHROOT: enabling debian custom services in chroot'
-  $QUO/etc/init.d/wedro_chroot.sh init
+  $QUO/etc/init.d/wedro_chroot.sh install
 }
 
 #######################################################################################

@@ -12,11 +12,11 @@ CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
 
 ### BEGIN INIT INFO
 # Provides:          $SCRIPT_NAME
-# Required-Start:
+# Required-Start:    wedro_mount.sh
 # Required-Stop:
 # X-Start-Before:
 # Default-Start:     2 3 4 5
-# Default-Stop:
+# Default-Stop:      0 6
 ### END INIT INFO
 
 script_install() {
