@@ -31,6 +31,7 @@ C_OPT="$CUSTOM/opt"
 C_ROOT="$CUSTOM/root"
 C_VAR="$CUSTOM/var"
 C_ETC="$CUSTOM/etc"
+C_CHROOT="$CUSTOM/chroot"
 
 ###################################################
 
@@ -62,19 +63,28 @@ if [ -z "$(mount | grep '\/etc\/opt')" ]; then
 else
   echo "Error: ETC/OPT seems already mounted" >&2
 fi
+
+if [ -z "$(mount | grep '\/srv\/chroot')" ]; then
+  echo "Mounting SRV/CHROOT"
+  mkdir -p /srv/chroot
+  mount --bind $C_CHROOT /srv/chroot
+else
+  echo "Error: SRV/CHROOT seems already mounted" >&2
+fi
+
 }
 
 stop() {
 if [ -n "$(mount | grep '\/opt')" ]; then
   echo "Unmounting OPTWARE"
-  umount /opt
+  umount -l /opt
 else
   echo "Error: OPTWARE seems already unmounted" >&2
 fi
 
 if [ -n "$(mount | grep '\/root')" ]; then
   echo "Unmounting ROOT"
-  umount /root
+  umount -l /root
 else
   echo "Error: ROOT seems already unmounted" >&2
 fi
@@ -92,6 +102,14 @@ if [ -n "$(mount | grep '\/etc\/opt')" ]; then
 else
   echo "Error: ETC/OPT seems already unmounted" >&2
 fi
+
+if [ -n "$(mount | grep '\/srv\/chroot')" ]; then
+  echo "Unmounting SRV/CHROOT"
+  umount /srv/chroot
+else
+  echo "Error: SRV/CHROOT seems already unmounted" >&2
+fi
+
 }
 
 #######################################################################

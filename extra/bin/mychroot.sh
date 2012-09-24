@@ -1,3 +1,3 @@
 #!/bin/sh
 
-chroot /var/opt/chroot $@
+chroot /srv/chroot $@

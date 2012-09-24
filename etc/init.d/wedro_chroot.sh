@@ -6,8 +6,7 @@ SCRIPT_STOP='01'
 
 MOUNT_DIR='/DataVolume/shares'
 
-CUSTOM_VAR='/var/opt'
-CHROOT_DIR="$CUSTOM_VAR/chroot"
+CHROOT_DIR="/srv/chroot"
 CHROOT_SERVICES="$(cat /etc/opt/chroot-services.list)"
 
 ### BEGIN INIT INFO
@@ -32,25 +31,38 @@ script_remove() {
 
 #######################################################################
 
+MOUNT_COUNTS="$(mount | grep $CHROOT_DIR | wc -l)"
+
 check_mounted() {
-  if [ -z "$(mount | grep $CHROOT_DIR)" ]; then
+  if [[ $MOUNT_COUNTS -lt 1 ]]; then
       echo "CHROOT sems unmounted. exiting"
       exit 1
   fi
 }
 
-check_unmounted() {
-  if [ -n "$(mount | grep $CHROOT_DIR)" ]; then
-      echo "CHROOT sems mounted. exiting"
+CHROOT_COUNTS="$(chroot $CHROOT_DIR mount | wc -l)"
+
+check_started() {
+  check_mounted
+  if [[ $CHROOT_COUNTS -gt 0 ]]; then
+      echo "CHROOT sems started. exiting"
       exit 1
   fi
 }
 
+check_stopped() {
+  check_mounted
+  if [[ $CHROOT_COUNTS -eq 0 ]]; then
+      echo "CHROOT sems stopped. exiting"
+      exit 1
+  fi
+}
 
 #######################################################################
 
 start() {
-    check_unmounted
+    check_started
+
     mount --bind $MOUNT_DIR $CHROOT_DIR/mnt
     mount --bind /opt $CHROOT_DIR/opt
 
@@ -64,7 +76,8 @@ start() {
 }
 
 stop() {
-    check_mounted
+    check_stopped
+
     for ITEM in $CHROOT_SERVICES; do
         chroot $CHROOT_DIR service $ITEM stop
     done
