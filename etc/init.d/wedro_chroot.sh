@@ -31,31 +31,31 @@ script_remove() {
 
 #######################################################################
 
-MOUNT_COUNTS="$(mount | grep $CHROOT_DIR | wc -l)"
-
 check_mounted() {
-  if [[ $MOUNT_COUNTS -lt 1 ]]; then
-      echo "CHROOT sems unmounted. exiting"
-      exit 1
-  fi
+    MOUNT_COUNTS="$(mount | grep $CHROOT_DIR | wc -l)"
+    if [[ $MOUNT_COUNTS -lt 1 ]]; then
+        echo "CHROOT sems unmounted. exiting"
+        exit 1
+    fi
+    CHROOT_COUNTS="$(chroot $CHROOT_DIR mount | wc -l)"
 }
 
-CHROOT_COUNTS="$(chroot $CHROOT_DIR mount | wc -l)"
+
 
 check_started() {
-  check_mounted
-  if [[ $CHROOT_COUNTS -gt 0 ]]; then
-      echo "CHROOT sems started. exiting"
-      exit 1
-  fi
+    check_mounted
+    if [[ $CHROOT_COUNTS -gt 0 ]]; then
+        echo "CHROOT sems started. exiting"
+        exit 1
+    fi
 }
 
 check_stopped() {
-  check_mounted
-  if [[ $CHROOT_COUNTS -eq 0 ]]; then
-      echo "CHROOT sems stopped. exiting"
-      exit 1
-  fi
+    check_mounted
+    if [[ $CHROOT_COUNTS -eq 0 ]]; then
+        echo "CHROOT sems stopped. exiting"
+        exit 1
+    fi
 }
 
 #######################################################################
@@ -82,12 +82,12 @@ stop() {
         chroot $CHROOT_DIR service $ITEM stop
     done
 
-    chroot $CHROOT_DIR umount /dev/pts
-    chroot $CHROOT_DIR umount /sys
-    chroot $CHROOT_DIR umount /proc
+    chroot $CHROOT_DIR umount -l /dev/pts
+    chroot $CHROOT_DIR umount -l /sys
+    chroot $CHROOT_DIR umount -l /proc
 
-    umount $CHROOT_DIR/opt
-    umount $CHROOT_DIR/mnt
+    umount -l $CHROOT_DIR/opt
+    umount -l $CHROOT_DIR/mnt
 }
 
 #######################################################################

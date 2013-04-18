@@ -5,10 +5,11 @@ C_ROOT="$CUSTOM/root"
 C_OPT="$CUSTOM/opt"
 C_VAR="$CUSTOM/var"
 C_ETC="$CUSTOM/etc"
+C_CHROOT="$CUSTOM/chroot"
 
 QUO="/DataVolume/quo"
 
-CHROOT_DIR='/var/opt/chroot'
+CHROOT_DIR='/srv/chroot'
 
 #############################################
 
@@ -43,6 +44,10 @@ fi
 
 if [ ! -d $C_ETC ]; then
   mkdir -p $C_ETC
+fi
+
+if [ ! -d $C_CHROOT ]; then
+  mkdir -p $C_CHROOT
 fi
 
 #############################################
@@ -164,16 +169,16 @@ script_optware() {
 return_chroot() {
   dpkg -i $QUO/extra/pkg/debootstrap_1.0.10lenny1_all.deb > /dev/null
   ln -s -f /usr/share/debootstrap/scripts/sid /usr/share/debootstrap/scripts/testing
-  if [ -z "$(mount | grep '\/DataVolume\/custom\/var')" ]; then
+  if [ -z "$(mount | grep $C_CHROOT)" ]; then
     echo "CHROOT: custom /VAR was unmounted. Fixing..."
-    mount --bind /DataVolume/custom/var /var/opt
+    mount --bind $C_CHROOT $CHROOT_DIR
   fi
   if [ ! -d $CHROOT_DIR ]; then
     echo "CHROOT: chroot dir was absent. Fixing..."
     mkdir -p $CHROOT_DIR
   fi
   debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $CHROOT_DIR http://ftp.ru.debian.org/debian/
-  echo 'primary' > $CHROOT_DIR/etc/debian_chroot
+  echo 'chroot' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
   chroot $CHROOT_DIR apt-get -y update
   chroot $CHROOT_DIR apt-get -y install htop mc screen upgrade-system
