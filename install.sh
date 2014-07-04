@@ -52,13 +52,6 @@ fi
 
 #############################################
 
-## APT magic
-#echo 'APT: holding udev, enabling lenny repos instead of squeeze'
-#aptitude hold udev
-#sed -ie "s/deb .* squeeze/#&/g" /etc/apt/sources.list
-#echo 'deb http://archive.debian.org/debian/ lenny main' >> /etc/apt/sources.list
-#aptitude clean > /dev/null
-
 ## HDD magic
 echo 'HDD: fighting annoying parking'
 $QUO/sbin/idle3ctl -d /dev/sda
@@ -97,15 +90,9 @@ fi
 ## ETC magic
 locale-gen
 
-#for BINARY in "$(ls $QUO/extra/bin)"; do
-  cp $QUO/extra/bin/* /root/.bin
-#done
+# Root utilities
+cp $QUO/extra/bin/* /root/.bin
 chmod -R a+x /root/.bin
-
-# CRON
-#cp $QUO/extra/cron/mybooklive /etc/cron.daily
-#chmod a+x /etc/cron.daily/mybooklive
-#/etc/init.d/cron restart
 
 # Settings
 touch /etc/opt/chroot-services.list
@@ -122,9 +109,6 @@ fi
 if [ -z "$(cat /root/.profile | grep 'PATH' | grep '\/root\/.bin')" ]; then
   echo -e 'export PATH=$PATH:/root/.bin' >> /etc/profile
 fi
-
-# APT 2
-#apt-key adv --recv-keys --keyserver keyserver.ubuntu.com AED4B06F473041FA > /dev/null
 
 #############################################
 
@@ -177,7 +161,7 @@ return_chroot() {
     echo "CHROOT: chroot dir was absent. Fixing..."
     mkdir -p $CHROOT_DIR
   fi
-  debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $CHROOT_DIR http://ftp.ru.debian.org/debian/
+  debootstrap --variant=minbase --exclude=yaboot,udev,dbus --include=mc,aptitude testing $CHROOT_DIR http://cdn.debian.net/debian/
   echo 'chroot' > $CHROOT_DIR/etc/debian_chroot
   sed -i 's/^\(export PS1.*\)$/#\1/g' $CHROOT_DIR/root/.bashrc
   chroot $CHROOT_DIR apt-get -y update
@@ -205,9 +189,6 @@ do_zero() {
     return_chroot
   fi
   update_quo
-
-  ## "Infect" firmware 
-  #$QUO/extra/infect/wedroInfectRootfs.sh
 }
 
 #######################################################################################
@@ -246,22 +227,6 @@ update_scripts() {
   done
 }
 
-infect_update() {
-  if [ -z "$2"]; then
-    echo "[QUO]: no rootfs"
-    exit 1
-  else
-    echo "TODO: \"Infect\" firmware"
-    #mount --bind "$QUO" "$2/opt"
-    #SCRIPTS="wedro_mount.sh wedro_optware.sh wedro_chroot.sh"
-    #for ITEM in "$SCRIPTS"; do
-    #  chroot "$2" "$2/opt/init.d/$ITEM" install
-    #done
-    #umount "$2/opt"
-  fi
-}
-
-
 #######################################################################################
 #######################################################################################
 #######################################################################################
@@ -284,9 +249,6 @@ case "$1" in
     ;;
     renew)
         update_scripts
-    ;;
-    infect)
-        infect_update
     ;;
     *)
         echo $"Usage: $0 {setup (!) | init | optware (*) | chroot (*) | update (*) }"
