@@ -23,7 +23,7 @@ fi
 #############################################
 
 return_quo() {
-echo 'Set up customizations =)'
+echo 'Set up user customizations =)'
 cd /
 
 ## PREPARING Custom dirs
